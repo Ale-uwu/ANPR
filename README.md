@@ -1,5 +1,5 @@
 # ANPR
-Esto es ANPR, este es el código:
+Este es el código ANPR:
   - https://medium.com/programming-fever/license-plate-recognition-using-opencv-python-7611f85cdd6c
   - Aquí está la cosa a recrear
 # MONDONGO
