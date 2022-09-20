@@ -4,4 +4,4 @@ Esto es ANPR, Codigo ANPR:
   - Aquí está la cosa a recrear
 # MONDONGO
 Ya hecho con open cv, thesseract y phyton:
--https://pyimagesearch.com/2020/09/21/opencv-automatic-license-number-plate-recognition-anpr-with-python/
+  - https://pyimagesearch.com/2020/09/21/opencv-automatic-license-number-plate-recognition-anpr-with-python/
