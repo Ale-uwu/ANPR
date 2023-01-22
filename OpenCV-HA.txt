@@ -1,7 +1,0 @@
-Para usar OpenCV en Home Assitant hemos primero de introducir el siguiente código:
-image_processing:
-  - platform: opencv
-    source:
-      - entity_id: camera.front_door
-
-puedes darle nombre también de forma opcional para darle nombre a la entidad
