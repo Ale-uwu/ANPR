@@ -1,0 +1,132 @@
+// El programa "Detector cuadrado".
+// Carga secuencialmente varias imágenes e intenta encontrar cuadrados en
+// cada imagen
+#incluye " opencv2/core.hpp "
+#incluye " opencv2/imgproc.hpp "
+#incluye " opencv2/imgcodecs.hpp "
+#incluye " opencv2/highgui.hpp "
+#incluir <iostream>
+utilizando el espacio de nombres cv ;
+utilizando el espacio de nombres estándar ;
+ ayuda de vacío estático ( const  char * nombre del programa)
+{
+    cout <<
+    "\nUn programa que utiliza escalado piramidal, Canny, contornos y simplificación de contornos\n"
+    "para encontrar cuadrados en una lista de imágenes (pic1-6.png)\n"
+    "Devuelve la secuencia de cuadrados detectados en la imagen.\n"
+    "Llamar:\n"
+    "./" << nombrePrograma << " [nombre_archivo (opcional)]\n"
+    "Usando la versión de OpenCV" <<VERSIÓN_CV << "\n" << endl;
+}
+umbral int = 50, N = 11;
+const  char * wndname = "Demostración de detección cuadrada" ;
+// funcion auxiliar:
+// encuentra un coseno de ángulo entre vectores
+// desde pt0->pt1 y desde pt0->pt2
+ ángulo doble estático (Punto pt1, Punto pt2, Punto pt0 )
+{
+    doble dx1 = pt1.x -pt0. x ;
+    doble dy1 = pt1.y -pt0. y ;
+    doble dx2 = pt2. x -pt0. x ;
+    doble dy2 = pt2. y -pt0. y ;
+    retorno (dx1*dx2 + dy1*dy2)/sqrt ((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
+}
+// devuelve la secuencia de cuadrados detectados en la imagen.
+static  void buscarCuadrados( const Tapete e imagen, vector<vector<Punto> >y cuadrados)
+{
+    cuadrados.clear();
+    Mat pyr, timg, gray0(imagen.tamaño (),CV_8U ), gris;
+    // reduce y aumenta la escala de la imagen para filtrar el ruido
+    pyrDown (imagen, pyr,Tamaño (imagen.columnas /2, imagen.filas /2));
+    pyrUp (pyr, timg, imagen. tamaño ());
+    vector<vector<Punto> > contornos;
+    // encuentra cuadrados en cada plano de color de la imagen
+    para ( int c = 0; c < 3; c++)
+    {
+        int ch[] = {c, 0};
+        mixChannels (&timg, 1, &gray0, 1, ch, 1);
+        // probar varios niveles de umbral
+        para ( int l = 0; l < N; l++)
+        {
+            // piratear: use Canny en lugar del nivel de umbral cero.
+            // Canny ayuda a atrapar cuadrados con sombreado degradado
+            si ( l == 0 )
+            {
+                // aplicar Canny. Tome el umbral superior del control deslizante
+                // y establecer el valor inferior en 0 (lo que obliga a los bordes a fusionarse)
+                Canny (gris0, gris, 0, trillar, 5);
+                // dilatar la salida astuta para eliminar el potencial
+                // agujeros entre segmentos de borde
+                dilatar (gris, gris, Mat (),Punto (-1,-1));
+            }
+            más
+            {
+                // aplicar umbral si l!=0:
+                // tgray(x,y) = gray(x,y) < (l+1)*255/N ? 255 : 0
+                gris = gris0 >= (l+1)*255/N;
+            }
+            // encuentra contornos y los almacena todos como una lista
+            findContours (gris, contornos,RETR_LIST ,CADENA_APPROX_SIMPLE );
+            vector<Punto> aprox;
+            // prueba cada contorno
+            for ( tamaño_t i = 0; i < contornos.tamaño(); i++ )
+            {
+                // contorno aproximado con precisión proporcional
+                // al perímetro del contorno
+                approxPolyDP (contornos[i], aprox.arcLength (contornos[i], verdadero )*0.02, verdadero );
+                // los contornos cuadrados deben tener 4 vértices después de la aproximación
+                // área relativamente grande (para filtrar contornos ruidosos)
+                // y ser convexo.
+                // Nota: se usa el valor absoluto de un área porque
+                // el área puede ser positiva o negativa - de acuerdo con el
+                // orientación del contorno
+                if (tamaño aproximado() == 4 &&
+                    fabulososárea de contorno (aprox.)) > 1000 &&
+                    isContourConvex (aprox.)
+                {
+                    doble maxCoseno = 0;
+                    para ( int j = 2; j < 5; j++)
+                    {
+                        // encuentra el coseno máximo del ángulo entre los bordes de las juntas
+                        doble coseno = fabs(ángulo(aprox.[j%4], aprox.[j-2], aprox.[j-1]));
+                        maxCoseno =MAX (maxCosine, coseno);
+                    }
+                    // si los cosenos de todos los ángulos son pequeños
+                    // (todos los ángulos miden ~90 grados) luego escribe quandrange
+                    // vértices de la secuencia resultante
+                    si ( maxCosine < 0.3 )
+                        cuadrados.push_back(aprox);
+                }
+            }
+        }
+    }
+}
+int main( int argc, char ** argv)
+{
+    const  char * nombres[] = { "pic1.png" , "pic2.png" , "pic3.png" ,
+        "pic4.png" , "pic5.png" , "pic6.png" , 0 };
+    ayuda(argv[0]);
+    si (argc > 1)
+    {
+     nombres[0] = argv[1];
+     nombres[1] = 0;
+    }
+    for ( int i = 0; nombres[i] != 0; i++ )
+    {
+        cadena nombre de archivo =muestras::findFile (nombres[i]);
+        Imagen del tapete =imread (nombre de archivo,LEER_IM_COLOR );
+        si (imagen.vacío () )
+        {
+            cout << "No se pudo cargar" << nombre del archivo << endl;
+            continuar ;
+        }
+        vector<vector<Punto> > cuadrados;
+        findSquares(imagen, cuadrados);
+        polilíneas (imagen, cuadrados, verdadero ,Escalar (0, 255, 0), 3,LÍNEA_AA );
+        imshow (wndname, imagen);
+        int c =tecla de espera ();
+        si ( c == 27 )
+            romper ;
+    }
+    devolver 0;
+}
