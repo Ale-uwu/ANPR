@@ -1,0 +1,28 @@
+
+# Cpoiar Códifo poco a poco
+
+def stackImages[scale,ImgArray]:
+   nows - Len(Ingarray)
+                         01 11st)
+   it romsovailable:
+      for x in range_(_0, rows):
+        for y in range(e, cols):
+          it 12]
+                                        (в, 0) None, scale, scale)
+          else:
+                                                                       копе, scale, scale)
+          11 = 2j CVZ.COLOR GRAYZBGR)
+     inageulank - mp.zeros(height, width, J) np.uinta)
+      hon I'rows
+      for x in range(e, rows):
+     ver - np.vstack(hor)
+elset
+     for x in range(e, rows):
+         it ingArray|x]. shape shapel :2]:
+                                                     (i) @), копе, scale, scale)
+         elses
+                                                     (ingarray() |.shape] None,scale, scale)
+         it -- 23 ingarray[x| CVZ.COLOR GRAY20GR)
+     hor rp.hstack(ingerray)
+    ver - hor
+return ver
