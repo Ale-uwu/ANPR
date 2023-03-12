@@ -13,7 +13,7 @@ def nada(x):
 #cam = cv2.VideoCapture("http://192.168.251.107:8080/video") 
 cam = cv2.VideoCapture(0)
 #--------------------------------------------------------------------------     
-# Se crea la ventana llamada "a" (padría ser cualquier nombre), en esta ventana, al ejecutar el programa se encontrarán las barras deslizadores del filtro Treshold y la imagen con el filtro aplicado
+# Se crea la ventana llamada "a" (podría ser cualquier nombre), en esta ventana, al ejecutar el programa se encontrarán las barras deslizadores del filtro Treshold y la imagen con el filtro aplicado
 cv2.namedWindow("a")
 cv2.createTrackbar("lim1","a",0,255,nada)
 cv2.createTrackbar("lim2","a",0,255,nada)
